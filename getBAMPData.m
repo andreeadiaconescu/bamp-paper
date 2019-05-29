@@ -1,49 +1,23 @@
-function [cue, cue_advice_space,y,input_u,takeAdv,take_helpfulAdvice, ...
-    perf_acc,against_misleadingAdvice,percentage_against_advice_hiprob,...
-    percentage_with_advice_lowprob] =  getBAMPData(details,options,fileBehav)
+function [perf_acc,cScore,take_adv_helpful,go_against_adv_misleading,choice_with, ...
+                choice_against,choice_with_chance,go_with_stable_helpful_advice,...
+                adviceTakingSwitch,...
+                go_with_volatile_advice, go_against_volatile_advice,...
+                go_with_stable_helpful_advice1,go_with_stable_helpful_advice2,...
+                take_adv_overall,RTStable,RTVolatile,AccuracyStable,AccuracyVolatile] ...
+                = getBAMPData(input_u,y,RT,iValid,options)
 
-
-sub = details.dirSubject;
-subjectData = {};
-finalBehavMatrix{1,1} = {};
-finalCodeMatrix{1,1}     = {};
-if ~exist(fileBehav, 'file')
-    warning('Behavioral logfile for subject %s not found', sub)
-    y = [];
-    input_u = [];
-    takeAdv = [];
-    take_helpfulAdvice = [];
-    acc = [];
-    perf_acc = [];
-    remove_zeros = [];
-    against_misleadingAdvice = [];
-else
-    subjectData = load(fileBehav);
-    [behavMatrix,codeMatrix,~] = bamp_get_responses(subjectData.SOC.Session(2).exp_data,options);
-    finalBehavMatrix = behavMatrix;
-    finalCodeMatrix  = codeMatrix;
-    outputMatrix     = finalBehavMatrix;
-    outputCodes      = finalCodeMatrix;
-    
-    y            = outputMatrix(:,3);
-    input_u      = [outputMatrix(:,1) outputMatrix(:,2)];
-    iValid       = logical(outputMatrix(:,8));
-
-end
-save(fullfile(details.behav.pathResults,'behavMatrix.mat'), 'outputMatrix','-mat');
-
-%% Behaviour statistics collected here
-
-% iValid is the row of trials where a response was made; 1 = response made;
-%                                                        0 = miss
 remove_zeros_input        = (input_u(:,1)+ones(size(y)).*5)./6;
 remove_ones_input         = (input_u(:,1)+ones(size(y)).*6)./6;
 remove_ones_y             = (y(:,1)+ones(size(y)).*5)./5;
 
+% iValid is the row of trials where a response was made; 1 = response made;
+%                                                        0 = miss
+% logical array
 adviceCongruence          = input_u(iValid,1);
 cue                       = input_u(iValid,2);
 binaryLotteryMax          = double(cue == max(cue)); % Select trials when the cue probability is maximum
 binaryLotteryMin          = double(cue == min(cue)); % Select trials when the cue probability is minimum
+binaryLotteryChance       = double(cue==0.55|cue==0.50); % Select trials when the cue probability is around 50%
 
 totalTrials               = size(y(iValid,1),1);
 totalHelpfulTrials        = sum(adviceCongruence);
@@ -54,24 +28,44 @@ adviceTakingBehaviour              = double(y(iValid,1)==remove_zeros_input(iVal
 adviceRefusalBehaviour             = double(remove_ones_y(iValid,1)==remove_ones_input(iValid,1));
 
 
-perf_acc                 = sum(congruenceBehaviourAdvice)./totalTrials;
-take_helpfulAdvice       = sum(adviceTakingBehaviour)./totalHelpfulTrials;
-against_misleadingAdvice = sum(adviceRefusalBehaviour)./totalMisleadingTrials;
-takeAdv                  = sum(y(iValid,1))./totalTrials;
+perf_acc                 = sum(congruenceBehaviourAdvice)./totalTrials; % percentage of correct trials, disregarding misses
+take_adv_helpful         = sum(adviceTakingBehaviour)./totalHelpfulTrials;
+go_against_adv_misleading= sum(adviceRefusalBehaviour)./totalMisleadingTrials;
+take_adv_overall         = sum(y(iValid,1))./totalTrials;
 go_against_advice        = ((binaryLotteryMax+(ones(size(binaryLotteryMax)).*-1)) == y(iValid,1)); % zeros will match zeros
+choice_against           = sum(go_against_advice)./sum(binaryLotteryMax); % Calculate percentage of going against the advice when cue is 65%
 go_with_advice           = ((binaryLotteryMin+(ones(size(binaryLotteryMin)).*5))./6 == y(iValid,1)); % ones will match ones
+choice_with              = sum(go_with_advice)./sum(binaryLotteryMin);% Calculate percentage of going with the advice when cue is 35%
+go_with_advice_chance    = ((binaryLotteryChance+(ones(size(binaryLotteryChance)).*5))./6 == y(iValid,1)); % ones will match ones
+choice_with_chance       = sum(go_with_advice_chance)./sum(binaryLotteryChance);% Calculate percentage of going with the advice when cue is 35% 
+temp1                    = (congruenceBehaviourAdvice).*2; % Code correct responses with 1 and incorrect ones with -1 for cumulative score
+cScore                   = sum((temp1+(ones(size(y(iValid,1),1),1).*-1)));
 
-percentage_against_advice_hiprob           = sum(go_against_advice)./sum(binaryLotteryMax); % Calculate percentage of going against the advice when cue is 65%
-percentage_with_advice_lowprob             = sum(go_with_advice)./sum(binaryLotteryMin);% Calculate percentage of going with the advice when cue is 35%
+% Advice taking in particular phases of the task
+helpfulPhases                  = options.task.helpfulPhase1 + options.task.helpfulPhase2;
+StableTrials                   = logical(iValid.*logical(helpfulPhases));
+go_with_stable_helpful_advice  = sum(y(StableTrials))./sum(StableTrials); % go with advice in stable helpful phases
+RTStable                       = mean(RT(StableTrials));
+tempAccuracy                   = double(y(:,1)==input_u(:,1));
+AccuracyStable                 = sum(tempAccuracy(StableTrials))./sum(StableTrials);
+SwitchtoHelpfulTrials                        ...
+                               = logical(iValid.*logical(options.task.switchHelpful));
+adviceTakingSwitch ...
+                               = sum(y(SwitchtoHelpfulTrials))./sum(SwitchtoHelpfulTrials);
 
-% Get the pie chart probabilities
-cue                    = (outputMatrix(:,4));
-cue_advice_space       = (outputMatrix(:,2));
+VolatileTrials                 = logical(iValid.*logical(options.task.volatilePhase));
+go_with_volatile_advice        = sum(y(VolatileTrials))./sum(VolatileTrials); % go with advice in volatile phases
+go_against_volatile_advice     = 1 - go_with_volatile_advice;
+RTVolatile                     = mean(RT(VolatileTrials));
+AccuracyVolatile               = sum(tempAccuracy(VolatileTrials))./sum(VolatileTrials);
 
-fprintf('Subject took the advice (percent): %d\n', takeAdv);
-fprintf('Subject took advice when it was helpful (percent): %d\n', take_helpfulAdvice);
-if takeAdv<=0.5
-    warning ('Something is wrong, check responses...');
-end
+%new
+StableH1Trials                 = logical(iValid.*logical(options.task.helpfulPhase1));
+go_with_stable_helpful_advice1 = sum(y(StableH1Trials))./sum(StableH1Trials); % go with advice in stable helpful 1
+
+%new2
+StableH2Trials                 = logical(iValid.*logical(options.task.helpfulPhase2));
+go_with_stable_helpful_advice2 = sum(y(StableH2Trials))./sum(StableH2Trials); % go with advice in stable helpful 2
+
 end
 
