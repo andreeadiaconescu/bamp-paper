@@ -14,24 +14,19 @@ function [errorIds, errorSubjects, errorFile] = ...
 %   errorSubjects
 %   errorFile
 %
-% See also dmpad_set_analysis_options
 errorSubjects = {};
 errorIds = {};
-errorFile = options.errorfile; % TODO: time stamp? own sub-folder?
-ModelArray = options.model.all;
-for iModel = 1:numel(ModelArray)
-    ModelName = ModelArray(iModel);
-    options = bamp_options(ModelName);
-    for idCell = options.subjectIDs
+errorFile = options.errorfile; 
+    for idCell = [options.controls options.antisocial,...
+            options.psychopathy]
         id = char(idCell);
-%         try
+        try
             bamp_analyze_subject(id,options);
-%         catch err
-%             errorSubjects{end+1,1}.id = id;
-%             errorSubjects{end}.error = err;
-%             errorIds{end+1} = id;
-%         end
+        catch err
+            errorSubjects{end+1,1}.id = id;
+            errorSubjects{end}.error = err;
+            errorIds{end+1} = id;
+        end
     end
-end
 
 save(fullfile(options.resultroot, errorFile), 'errorSubjects', 'errorIds');

@@ -1,0 +1,34 @@
+function bamp_second_level(options)
+%Performs all analysis steps at the group levle
+%   IN:    
+%           options     as set by bamp_options();
+
+fprintf('\n===\n\t The following pipeline Steps were selected. Please double-check:\n\n');
+Analysis_Strategy = options.pipe.executeStepsPerGroup;
+disp(Analysis_Strategy);
+fprintf('\n\n===\n\n');
+pause(2);
+
+doModelComparison              = Analysis_Strategy(1);
+doBehavAnalysis                = Analysis_Strategy(2);
+doCheckParameterCorrelations   = Analysis_Strategy(3);
+doParameterExtraction          = Analysis_Strategy(4);
+doComputeANOVAMAPs             = Analysis_Strategy(5);
+
+% Deletes previous preproc/stats files of analysis specified in options
+if doModelComparison
+    bamp_behav_model_evidence(options);
+end
+if doBehavAnalysis
+   bamp_extract_calculate_behaviour(options,'RT');   
+end
+if doCheckParameterCorrelations
+    bamp_check_correlations_regressors(options);
+end
+if doParameterExtraction
+    bamp_extract_calculate_MAPs(options,'beta');
+end
+if doComputeANOVAMAPs
+    bamp_extract_calculate_behaviour(options,'accuracy');
+    bamp_extract_calculate_behaviour(options,'advice_taking');
+end

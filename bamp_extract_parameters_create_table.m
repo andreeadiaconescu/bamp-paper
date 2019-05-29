@@ -21,7 +21,7 @@ for iSubject = 1:nSubjects
     id = char(options.subjectIDs(iSubject));
     details = bamp_ioio_subjects(id, options);
     tmp = load(fullfile(details.behav.pathResults,...
-        [perceptual_model,response_model,'_config.mat']));
+        [perceptual_model,response_model,'.mat']));
     variables_bamp{iSubject,1} = tmp.est_bamp.p_prc.mu_0(2);
     variables_bamp{iSubject,2} = tmp.est_bamp.p_prc.ka(2);
     variables_bamp{iSubject,3} = tmp.est_bamp.p_prc.om(2);
