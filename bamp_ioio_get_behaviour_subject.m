@@ -3,23 +3,94 @@ function bamp_ioio_get_behaviour_subject(id, options)
 details = bamp_ioio_subjects(id, options);
 fileBehav = details.behav.fileRawBehav;
 
+sub = details.dirSubject;
 
-[cue, cue_advice_space,~,input_u,takeAdv,take_helpfulAdvice, ...
-    perf_acc,against_misleadingAdvice,percentage_against_advice_hiprob,...
-    percentage_with_advice_lowprob] = getBAMPData(details,options,fileBehav);
+if ~exist(fileBehav, 'file')
+    warning('Behavioral logfile for subject %s not found', sub)
+    y = [];
+    input_u = [];
+else
+    subjectData = load(fileBehav);
+    [behavMatrix,codeMatrix,~] = bamp_get_responses(subjectData.SOC.Session(2).exp_data,options);
+    finalBehavMatrix = behavMatrix;
+    finalCodeMatrix  = codeMatrix;
+    outputMatrix     = finalBehavMatrix;
+    outputCodes      = finalCodeMatrix;
+    
+
+end
+
+save(fullfile(details.behav.pathResults,'behavMatrix.mat'), 'outputMatrix','outputCodes','-mat');
+
+% Collect data needed
+input_u_fromfile = outputMatrix(:,1);
+piechart_fromfile= outputMatrix(:,2);
+input_u          = [input_u_fromfile piechart_fromfile];
+y_choice         = outputMatrix(:,3);
+RT               = outputMatrix(:,5);
+cumScore         = outputMatrix(:,7);
+probeSelection   = outputMatrix(:,8);
+iValid           = logical(outputMatrix(:,end));
+
+[perf_acc,~,take_adv_helpful,go_against_adv_misleading,choice_with, ...
+                choice_against,choice_with_chance,go_with_stable_helpful_advice,...
+                adviceTakingSwitch,...
+                go_with_volatile_advice, go_against_volatile_advice,...
+                go_with_stable_helpful_advice1,go_with_stable_helpful_advice2,...
+                take_adv_overall,RTStable,RTVolatile,AccuracyStable,AccuracyVolatile] ...
+                = getBAMPData(input_u,y_choice,RT,iValid,options);
+            
 if isempty(input_u) % cue and cue advice are not subject-dependent, have to check inputs
     error('Behavioral data for subject %s not found', sub);
 end
 
+%% Probes
+probeCategories = [probeSelection(1,1) probeSelection(14,1), ...
+    probeSelection(49,1) probeSelection(73,1),...
+    probeSelection(110,1)];
+probes          = [];
 
-behav_bamp.take_adv_helpful                      = take_helpfulAdvice;
-behav_bamp.go_against_adv_misleading             = against_misleadingAdvice;
+for iProbe = 1:numel(probeCategories)
+    switch probeCategories(iProbe)
+        case 0
+            probeValue = 0.5;
+        case 1
+            probeValue = 0.5;
+        case 2
+            probeValue = 0;
+        case 3
+            probeValue = 1;
+            
+    end
+    
+    probeValue(iProbe) = probeValue;
+    
+    probes = [probes; probeValue(iProbe)];
+end
+
+
+%% Store data
+behav_bamp=[];
+
+behav_bamp.cScore                                = cumScore(end);
+behav_bamp.take_adv_helpful                      = take_adv_helpful;
+behav_bamp.go_against_adv_misleading             = go_against_adv_misleading;
 behav_bamp.perf_acc                              = perf_acc;
-behav_bamp.choice_against                        = percentage_against_advice_hiprob;
-behav_bamp.choice_with                           = percentage_with_advice_lowprob;
-behav_bamp.cue                                   = cue;
-behav_bamp.cue_advice_space                      = cue_advice_space;
-behav_bamp.take_adv_overall                      = takeAdv;
+behav_bamp.choice_against                        = choice_against;
+behav_bamp.choice_with                           = choice_with;
+behav_bamp.choice_with_chance                    = choice_with_chance;
+behav_bamp.go_with_stable_helpful_advice         = go_with_stable_helpful_advice;
+behav_bamp.go_with_stable_helpful_advice1        = go_with_stable_helpful_advice1;
+behav_bamp.go_with_stable_helpful_advice2        = go_with_stable_helpful_advice2;
+behav_bamp.adviceTakingSwitch = adviceTakingSwitch;
+behav_bamp.go_with_volatile_advice               = go_with_volatile_advice;
+behav_bamp.take_adv_overall                      = take_adv_overall;
+behav_bamp.go_against_volatile_advice            = go_against_volatile_advice;
+behav_bamp.RTstable                              = RTStable;
+behav_bamp.RTvolatile                            = RTVolatile;
+behav_bamp.AccuracyStable                        = AccuracyStable;
+behav_bamp.AccuracyVolatile                      = AccuracyVolatile;
+behav_bamp.probe                                 = probes';
 
-save(fullfile(details.behav.pathResults,[details.behav.BAMPTaskName,'.mat']), 'behav_bamp','-mat');
+save(fullfile(details.behav.pathResults,[details.dirSubject, '_behavVariables.mat']), 'behav_bamp','-mat');
 end
