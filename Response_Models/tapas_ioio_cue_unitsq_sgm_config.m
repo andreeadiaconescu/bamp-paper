@@ -48,7 +48,7 @@ c.logitze1sa = 0;
 
 % Zeta_2
 c.logze2mu = log(48);
-c.logze2sa = 1;
+c.logze2sa = 2^2;
 
 % Sufficient statistics of Gaussian parameter priors
 
