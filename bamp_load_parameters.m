@@ -17,6 +17,7 @@ for  iSubject = 1:length(subjectsAll)
     bamp_par{iSubject,2} = tmp.est_bamp.p_prc.ka(2);
     bamp_par{iSubject,3} = tmp.est_bamp.p_prc.om(2);
     bamp_par{iSubject,4} = tmp.est_bamp.p_prc.om(3);
+    bamp_par{iSubject,5} = tmp.est_bamp.p_prc.rho(2);
 end
 perceptualParameters = cell2mat(bamp_par);
 

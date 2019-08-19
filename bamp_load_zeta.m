@@ -11,7 +11,7 @@ for  iSubject = 1:length(subjectsAll)
     tmp = load(fullfile(details.behav.pathResults,[options.model.winningPerceptual, ...
                 options.model.winningResponse,'.mat']), 'est_bamp','-mat');
     
-    bamp_zeta{iSubject,1} = log(tmp.est_bamp.p_obs.ze1);
+    bamp_zeta{iSubject,1} = tmp.est_bamp.p_obs.ze1;
     bamp_zeta{iSubject,2} = tmp.est_bamp.p_obs.ze2;
 end
 zeta = cell2mat(bamp_zeta);
