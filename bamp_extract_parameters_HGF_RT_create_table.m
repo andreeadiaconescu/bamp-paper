@@ -35,13 +35,14 @@ for iSubject = 1:nSubjects
     variables_bamp{iSubject,2} = tmp.est_bamp.p_prc.ka(2);
     variables_bamp{iSubject,3} = tmp.est_bamp.p_prc.om(2);
     variables_bamp{iSubject,4} = tmp.est_bamp.p_prc.om(3);
-    variables_bamp{iSubject,5} = tmp.est_bamp.p_obs.ze1;
-    variables_bamp{iSubject,6} = tmp.est_bamp.p_obs.ze2;
-    variables_bamp{iSubject,7} = tmp.est_bamp.p_obs.be1;
-    variables_bamp{iSubject,8} = tmp.est_bamp.p_obs.be2;
-    variables_bamp{iSubject,9} = tmp.est_bamp.p_obs.be3;
-    variables_bamp{iSubject,10} = tmp.est_bamp.p_obs.be4;
-    variables_bamp{iSubject,11} = tmp.est_bamp.p_obs.ze;
+    variables_bamp{iSubject,5} = tmp.est_bamp.p_prc.rho(2);
+    variables_bamp{iSubject,6} = tmp.est_bamp.p_obs.ze1;
+    variables_bamp{iSubject,7} = tmp.est_bamp.p_obs.ze2;
+    variables_bamp{iSubject,8} = tmp.est_bamp.p_obs.be1;
+    variables_bamp{iSubject,9} = tmp.est_bamp.p_obs.be2;
+    variables_bamp{iSubject,10} = tmp.est_bamp.p_obs.be3;
+    variables_bamp{iSubject,11} = tmp.est_bamp.p_obs.be4;
+    variables_bamp{iSubject,12} = tmp.est_bamp.p_obs.ze;
 end
 
 
