@@ -7,7 +7,7 @@ function [model_posterior,xp, protected_xp] = bamp_behav_plot_model_selection(op
 % OUT
 % Model posterior probabilities & (Protected) exceedance probabilities
 
-nModels = 15;
+nModels = size(models,2);
 %% Model Selection
 [~,model_posterior,xp,protected_xp,~]=spm_BMS(models);
 H=model_posterior;
@@ -67,29 +67,30 @@ set(gca,'XTick',1:numel(perceptual_family.names))
 set(gca,'XTickLabel',options.family.perceptual.labels);
 ylabel('p(r|y)');
 
-responsemodelfamily1=perceptual_family;
-responsemodelfamily1=family_models1;
-responsemodelfamily1.alpha0=[];
-responsemodelfamily1.s_samp= [];
-responsemodelfamily1.exp_r=[];
-responsemodelfamily1.xp=[];
-responsemodelfamily1.names=options.family.responsemodels1.labels;
-responsemodelfamily1.partition = options.family.responsemodels1.partition;
-[family_models2,~] = spm_compare_families(models,responsemodelfamily1);
-
-figure;
-H=family_models2.exp_r;
-N=numel(H);
-colors=jet(numel(H));
-for i=1:N
-    h=bar(i,H(i));
-    if i==1, hold on, end
-    set(h,'FaceColor',colors(i,:))
+if options.model.RT ~= true
+    responsemodelfamily1=perceptual_family;
+    responsemodelfamily1=family_models1;
+    responsemodelfamily1.alpha0=[];
+    responsemodelfamily1.s_samp= [];
+    responsemodelfamily1.exp_r=[];
+    responsemodelfamily1.xp=[];
+    responsemodelfamily1.names=options.family.responsemodels1.labels;
+    responsemodelfamily1.partition = options.family.responsemodels1.partition;
+    [family_models2,~] = spm_compare_families(models,responsemodelfamily1);
+    
+    figure;
+    H=family_models2.exp_r;
+    N=numel(H);
+    colors=jet(numel(H));
+    for i=1:N
+        h=bar(i,H(i));
+        if i==1, hold on, end
+        set(h,'FaceColor',colors(i,:))
+    end
+    set(gca,'XTick',1:numel(options.family.responsemodels1.labels))
+    set(gca,'XTickLabel',options.family.responsemodels1.labels);
+    ylabel('p(r|y)');
 end
-set(gca,'XTick',1:numel(options.family.responsemodels1.labels))
-set(gca,'XTickLabel',options.family.responsemodels1.labels);
-ylabel('p(r|y)');
-
 
 return
 end
