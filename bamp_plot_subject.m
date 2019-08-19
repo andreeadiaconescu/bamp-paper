@@ -9,20 +9,23 @@ nModels          = size(iCombPercResp,1);
 
 diagnostics = false;
 
-for iModel=1:nModels
+for iModel= 1:nModels
     tmp = load(fullfile(details.behav.pathResults,...
-        [details.dirSubject, perceptual_models{iCombPercResp(iModel,1)}...
+        [perceptual_models{iCombPercResp(iModel,1)}...
         response_models{iCombPercResp(iModel,2)},'.mat']));
+    if options.model.RT == true
+        tapas_hgf_binary_plotTraj(tmp.est_bamp);
+    end
     switch iModel
-        case {1:9}
+        case 4
             sim_bamp = tapas_simModel(tmp.est_bamp.u, options.model.winningPerceptual, ...
                 tmp.est_bamp.p_prc.p, options.model.winningResponse, tmp.est_bamp.p_obs.p);
             temp  = (tmp.est_bamp.y == sim_bamp.y);
             sim_actual_y = double(temp');
             bamp_hgf_binary_plotTraj(tmp.est_bamp,sim_bamp, sim_actual_y,options);
-        case {10:12}
-            tapas_hgf_ar1_binary_plotTraj(tmp.est_bamp);
-        case {13:15}
+        case {1,2,3,5,6,7,8,9,10,11,12,13,14,15}
+            tapas_hgf_binary_plotTraj(tmp.est_bamp);
+        case {16,17,18}
             tapas_rw_binary_plotTraj(tmp.est_bamp);
     end
     if diagnostics == true

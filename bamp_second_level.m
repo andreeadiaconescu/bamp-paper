@@ -20,13 +20,17 @@ if doModelComparison
     bamp_behav_model_evidence(options);
 end
 if doBehavAnalysis
-   bamp_extract_calculate_behaviour(options,'RT');   
+   bamp_extract_calculate_behaviour(options,'RT'); 
+   bamp_extract_calculate_behaviour(options,'accuracy');
+   bamp_extract_calculate_behaviour(options,'advice_taking');
 end
 if doCheckParameterCorrelations
     bamp_check_correlations_regressors(options);
 end
 if doParameterExtraction
-    bamp_extract_calculate_MAPs(options,'beta');
+    bamp_extract_parameters_create_table(options);
+    bamp_extract_calculate_MAPs(options,'omega3');
+    bamp_extract_calculate_MAPs_RT(options,'be1');
 end
 if doComputeANOVAMAPs
     bamp_extract_calculate_behaviour(options,'accuracy');
