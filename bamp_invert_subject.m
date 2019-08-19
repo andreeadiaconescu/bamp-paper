@@ -14,7 +14,7 @@ nModels          = size(iCombPercResp,1);
 for iModel = 1:nModels
     details = bamp_ioio_subjects(id, options);
     fileBehav = details.behav.fileRawBehav;
-    sub = details.dirSubject;  
+    sub = details.dirSubject;
     if ~exist(fileBehav, 'file')
         warning('Behavioral logfile for subject %s not found', sub)
     else
@@ -23,12 +23,17 @@ for iModel = 1:nModels
         finalBehavMatrix = behavMatrix;
         outputMatrix     = finalBehavMatrix;
     end
-        
+    
     % Collect data needed
     input_u_fromfile = outputMatrix(:,1);
     piechart_fromfile= outputMatrix(:,2);
     input_u          = [input_u_fromfile piechart_fromfile];
-    y_choice         = outputMatrix(:,3);
+    if options.model.RT == true
+        y_choice         = [outputMatrix(:,3) outputMatrix(:,5)];
+    else
+        y_choice         = outputMatrix(:,3);
+    end
+    
     
     
     est_bamp=tapas_fitModel(y_choice,input_u,[perceptual_models{iCombPercResp(iModel,1)},'_config'],...
