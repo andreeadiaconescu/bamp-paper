@@ -147,13 +147,13 @@ c.rhosa = [NaN, 0, 0];
 % observation model does not use mu_i+1 (kappa then determines the
 % scaling of x_i+1).
 c.logkamu = [log(1), log(1)];
-c.logkasa = [     1,      0];
+c.logkasa = [     1,      1];
 
 % Omegas
 % Format: row vector of length n_levels.
 % Undefined (therefore NaN) at the first level.
 c.ommu = [NaN,  -3,  -6];
-c.omsa = [NaN, 4^2, 4^2];
+c.omsa = [NaN, 0, 4^2];
 
 % Gather prior settings in vectors
 c.priormus = [

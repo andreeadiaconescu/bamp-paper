@@ -135,7 +135,7 @@ c.logsa_0sa = [NaN,          0,      0];
 % Format: row vector of length n_levels.
 % Undefined (therefore NaN) at the first level.
 % Fix this to zero (-Inf in logit space) to set to zero.
-c.logitphimu = [NaN, tapas_logit(0.001,1), tapas_logit(0.1,1)]; % modified instead of -Inf
+c.logitphimu = [NaN, tapas_logit(0.5,1), tapas_logit(0.1,1)]; % modified instead of -Inf
 c.logitphisa = [NaN,    1,                  0];
 
 % ms
@@ -152,13 +152,13 @@ c.msa = [NaN,           1,           0];
 % This should be fixed (preferably to 1) if the observation model
 % does not use mu_i+1 (kappa then determines the scaling of x_i+1).
 c.logkamu = [NaN, log(1)];
-c.logkasa = [NaN,      0];
+c.logkasa = [NaN,      1];
 
 % Omegas
 % Format: row vector of length n_levels.
 % Undefined (therefore NaN) at the first level.
-c.ommu = [NaN,  -3,  -6];
-c.omsa = [NaN,   4^2, 4^2];
+c.ommu = [NaN,  -4,  -6];
+c.omsa = [NaN,   0, 4^2];
 
 % Gather prior settings in vectors
 c.priormus = [

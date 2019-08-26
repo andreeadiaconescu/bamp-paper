@@ -149,8 +149,8 @@ c.logsa_0sa = [NaN,    0,        1];
 % Fix this to zero (leading to a Gaussian random walk) by
 % setting logitphimu = -Inf; logitphisa = 0;
 % Undefined (therefore NaN) at the first level.
-c.logitphimu = [NaN, -Inf, tapas_logit(0.1,1)];
-c.logitphisa = [NaN,        0,    0];
+c.logitphimu = [NaN, -Inf, tapas_logit(0.5,1)];
+c.logitphisa = [NaN,        0,    1];
 
 
 % ms
@@ -173,13 +173,13 @@ c.kaub = [NaN, 2];
 % does not use mu_i+1 (kappa then determines the scaling of x_i+1).
 % Undefined (therefore NaN) at the first level.
 c.logitkamu = [NaN, 0];
-c.logitkasa = [NaN, 0];
+c.logitkasa = [NaN, 1];
 
 % Omegas
 % Format: row vector of length n_levels-1
 % Undefined (therefore NaN) at the first level.
 c.ommu = [NaN, -3];
-c.omsa = [NaN, 4^2];
+c.omsa = [NaN, 0];
 
 % Upper bound on theta (lower bound is always zero)
 % Format: scalar
