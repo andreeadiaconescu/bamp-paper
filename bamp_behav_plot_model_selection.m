@@ -9,7 +9,7 @@ function [model_posterior,xp, protected_xp] = bamp_behav_plot_model_selection(op
 
 nModels = size(models,2);
 %% Model Selection
-[~,model_posterior,xp,protected_xp,~]=spm_BMS(models);
+[~,model_posterior,xp,protected_xp,bor]=spm_BMS(models);
 H=model_posterior;
 P = protected_xp;
 N=numel(H);

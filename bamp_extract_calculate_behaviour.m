@@ -50,6 +50,10 @@ betweenSubjectsVariables   = [Groups];
 tblMixedANOVA              = simple_mixed_anova(withinSubjectsVariables, betweenSubjectsVariables, ...
     {'Phases'},{'Group'});
 disp(tblMixedANOVA);
+fprintf('\n===\n\t Mean:\n\n');
+disp(mean(reshape(advice_taking(:,selectedColumn),2*79,1)));
+fprintf('\n===\n\t STD:\n\n');
+disp(std(reshape(advice_taking(:,selectedColumn),2*79,1)));
 bamp_plot_scatter_States(reshapeVariables,Groups_Conditions,currentState,label);
 end
 

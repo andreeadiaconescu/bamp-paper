@@ -32,7 +32,8 @@ addpath(genpath(options.code));
 addpath('/Users/drea/Documents/Toolboxes/spm12')
 
 options.pipe.executeStepsPerSubject = {
-    'plotting'};
+    'inversion'
+    'behaviour'};
 options.pipe.executeStepsPerGroup   = [1 1 1 1 0];
 options.family.template = fullfile(options.configroot,'family_allmodels.mat');
 
@@ -57,20 +58,20 @@ options.task.volatilePhase = vertcat(zeros(42,1), ones(105,1), zeros(42,1));
 options.task.switchHelpful = vertcat(zeros(142,1), ones(6,1), zeros(41,1));
 
 options.model.RT  = 1;
-options.model.winningPerceptual = 'tapas_hgf_binary_reduced_omega';
+options.model.winningPerceptual = 'tapas_hgf_binary_reduced_omega'; 
 if options.model.RT == true
+    options.model.winningPerceptual = 'tapas_hgf_binary_drift'; % 'tapas_hgf_binary_reduced_omega';
     options.model.winningResponse   = 'tapas_logrt_linear_binary';
 else
     options.model.winningResponse   = 'tapas_ioio_unitsq_sgm';
 end
 
 
-options.model.all = {'HGF','HGF_Reduced1','HGF_Reduced2','HGF_Drift','HGF_Attractor','RW'};
+options.model.all =  {'HGF_R1','HGF_R2','HGF_Drift','HGF_2L','RW'};
 
 options.model.typeModel         = char(ModelName);
 options.errorfile               = 'Error_FirstLevel.mat';
 
-% Details about the model space
 
 switch options.model.typeModel
     case 'HGF'
@@ -90,6 +91,17 @@ switch options.model.typeModel
         options.model.responseModels   = ...
             {'tapas_ioio_unitsq_sgm','tapas_ioio_cue_unitsq_sgm',...
             'tapas_ioio_advice_unitsq_sgm'};
+    case 'HGF_2L'
+    options.model.perceptualModels   = 'tapas_hgf_binary_novol';
+        options.model.responseModels   = ...
+            {'tapas_ioio_unitsq_sgm','tapas_ioio_cue_unitsq_sgm',...
+            'tapas_ioio_advice_unitsq_sgm'};
+        options.model.simulationsParameterArray = {'ka','om','ze'};
+    case 'HGF_Attractor'
+        options.model.perceptualModels   = 'tapas_hgf_binary_attractor';
+        options.model.responseModels   = ...
+            {'tapas_ioio_unitsq_sgm','tapas_ioio_cue_unitsq_sgm',...
+            'tapas_ioio_advice_unitsq_sgm'};
         options.model.simulationsParameterArray = {'ka1','om','th','ze','mu2_0'};
     case 'HGF_Reduced2'
         options.model.perceptualModels   = 'tapas_hgf_binary_reduced_kappa';
@@ -102,25 +114,33 @@ switch options.model.typeModel
         options.model.responseModels   = ...
             {'tapas_ioio_unitsq_sgm','tapas_ioio_cue_unitsq_sgm',...
             'tapas_ioio_advice_unitsq_sgm'};
-        options.model.simulationsParameterArray = {'al'};
-    case 'HGF_NoVolatility'
-        options.model.perceptualModels   = 'tapas_hgf_binary_novol';
+    case 'AR1_2level'
+        options.model.perceptualModels   = 'tapas_hgf_binary_ar1_level2';
         options.model.responseModels   = ...
             {'tapas_ioio_unitsq_sgm','tapas_ioio_cue_unitsq_sgm',...
             'tapas_ioio_advice_unitsq_sgm'};
-        options.model.simulationsParameterArray = {'ka1','om','th','ze','mu2_0'};
+        options.model.simulationsParameterArray = {'ka','om','th','ze','m2'};
+    case 'AR1_3level'
+        options.model.perceptualModels   = 'tapas_hgf_binary_ar1_level3';
+        options.model.responseModels   = ...
+            {'tapas_ioio_unitsq_sgm','tapas_ioio_cue_unitsq_sgm',...
+            'tapas_ioio_advice_unitsq_sgm'};
+        options.model.simulationsParameterArray = {'ka','om','th','ze','m3'};
 end
 
 
 
 if options.model.RT == true
-    options.model.allperceptualModels = {'tapas_hgf_binary_reduced_omega','tapas_hgf_binary_reduced_kappa','tapas_hgf_binary_drift','tapas_hgf_binary_novol'};
+    options.model.allperceptualModels = {'tapas_hgf_binary_reduced_omega','tapas_hgf_binary_reduced_kappa',...
+                                         'tapas_hgf_binary_drift','tapas_hgf_binary_ar1_level2',...
+                                         'tapas_hgf_binary_ar1_level3','tapas_hgf_binary_novol'};
     options.model.allresponseModels = ...
         { 'tapas_logrt_linear_binary', 'tapas_logrt_linear_binary_cue',...
-        'tapas_logrt_linear_binary_advice'};
+        'tapas_logrt_linear_binary_advice','tapas_logrt_linear_binary_simple', 'tapas_logrt_linear_binary_simple_cue',...
+        'tapas_logrt_linear_binary_simple_advice'};
 else
     options.model.allperceptualModels = {'tapas_hgf_binary','tapas_hgf_binary_reduced_omega','tapas_hgf_binary_reduced_kappa',...
-        'tapas_hgf_binary_drift','tapas_hgf_binary_novol','tapas_rw_binary'};
+        'tapas_hgf_binary_drift','tapas_hgf_binary_ar1_level3', 'tapas_hgf_binary_novol','tapas_rw_binary'};
     options.model.allresponseModels = ...
         {'tapas_ioio_unitsq_sgm_mu3','tapas_ioio_cue_unitsq_sgm_mu3','tapas_ioio_advice_unitsq_sgm_mu3',...
         'tapas_ioio_unitsq_sgm','tapas_ioio_cue_unitsq_sgm','tapas_ioio_advice_unitsq_sgm'};
@@ -128,23 +148,30 @@ end
 
 
 if options.model.RT == true
-    options.family.perceptual.labels = {'HGF_R1','HGF_R2','Drift','HGF_NoVolatility'};
-    options.family.perceptual.partition = [1 2 3 4];
+    options.family.perceptual.labels = {'HGF_R1','HGF_R2','ConstantDrift','Drift2','Drift3','HGF_NoVolatility'};
+    options.family.perceptual.partition = [1 2 3 4 5 6];
+    
+    options.family.responsemodels1.labels = {'No Drift','Drift'};
+    options.family.responsemodels1.partition = [1 1 2 2 2 1];
+    options.model.labels = ...
+        {'HGF1','HGF2','ConstantDrift','Drift2','Drift3','HGF_NoVolatility'};
 else
-    options.family.perceptual.labels = {'HGF','HGF_R1','HGF_R2','Drift','HGF_NoVol','RW'};
-    options.family.perceptual.partition = [1 1 1 2 2 2 3 3 3 4 4 4 5 5 5 6 6 6];
+    options.family.perceptual.labels = {'HGF_R1','HGF_R2','HGF_Drift','HGF_2L','RW'};
+    options.family.perceptual.partition = [1 1 1 2 2 2 3 3 3 4 4 4 5 5 5];
     
     options.family.responsemodels1.labels = {'Both','Cue','Advice'};
-    options.family.responsemodels1.partition = [1 2 3 1 2 3 1 2 3 1 2 3 1 2 3 1 2 3];
+    options.family.responsemodels1.partition = [1 2 3 1 2 3 1 2 3 1 2 3 1 2 3];
     options.model.labels = ...
-        {'HGF_Both', 'Cue','HGF_Advice','HGFR1_Both', 'Cue','HGFR1_Advice',...
-        'HGFR2_Both', 'Cue','HGFR2_Advice','Drift_Both','Cue',...
-        'Drift_Advice','NoVol_Both','Cue','NoVol_Advice','RW_Both','Cue','RW_Advice'};
+        {'HGF1_Both', 'Cue','HGF1_Advice',...
+        'HGF2_Both', 'Cue','HGF2_Advice','Drift_Both','Cue',...
+        'Drift_Advice','HGF_2LV_Both', 'Cue','HGF_2LV_Advice',...
+        'RW_Both','Cue','RW_Advice'};
 end
 
 % Parameters
 options.model.hgf   = {'mu2_0','kappa','omega_2','omega_3','rho'};
 options.model.rw    = {'mu2_0','alpha'};
+options.model.ar1   = {'m3','phi3','kappa','omega_2','omega_3'};
 
 options.model.sgm   = {'zeta_1','zeta_2'};
 

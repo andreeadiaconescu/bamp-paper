@@ -30,7 +30,7 @@ end
 if doParameterExtraction
     bamp_extract_parameters_create_table(options);
     bamp_extract_calculate_MAPs(options,'omega3');
-    bamp_extract_calculate_MAPs_RT(options,'be1');
+    bamp_extract_calculate_MAPs_RT(options,'be2');
 end
 if doComputeANOVAMAPs
     bamp_extract_calculate_behaviour(options,'accuracy');

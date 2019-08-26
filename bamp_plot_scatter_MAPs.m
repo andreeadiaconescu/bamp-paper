@@ -1,6 +1,6 @@
 function bamp_plot_scatter_MAPs(selectedVariablePhases,Groups_Conditions,currentVAR,label)
 
-GroupingVariables = {'Controls','Psychopathy','Antisocial Personality Disorder'};
+GroupingVariables = {'Controls','Psychopathy','Antisocial'};
 
 figure;
 

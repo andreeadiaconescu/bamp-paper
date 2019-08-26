@@ -30,7 +30,7 @@ switch currentVAR
         label                   = '\omega{_2}';
     case 'omega3'
         curr_var                = perceptualParameters(:,4);
-        label                   = '\omega{_r}';
+        label                   = '\omega{_3}';
     case 'rho'
         curr_var                = perceptualParameters(:,5);
         label                   = 'rho';

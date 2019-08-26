@@ -1,7 +1,8 @@
-function bamp_plot_scatter_States(Variables,Groups_Conditions,currentState,label)
+function bamp_plot_scatter_HGFStates(Variables,Groups_Conditions,currentState,label)
 
-GroupingVariables = {'CON:St','CON:Vol','PSY:St','PSY:Vol',...
-                    'ANTI:St','ANTI:Vol'};
+GroupingVariables = {'Stable','Volatile',...
+                     'Stable','Volatile',...
+                     'Stable','Volatile'};
 
 figure;
 
@@ -9,12 +10,12 @@ H   = Variables;
 N   = numel(Variables);
 
 switch currentState
-    case 'RT'
+    case 'mu3'
         colors=winter(numel(H));
-    case 'accuracy'
+    case 'pi2'
         colors=bone(numel(H));
     otherwise
-        colors=copper(numel(H));
+        colors=cool(numel(H));
 end
 for i=1:N
     e = notBoxPlot(cell2mat(H(i)),cell2mat(Groups_Conditions(i)),'markMedian',true);
@@ -27,7 +28,7 @@ for i=1:N
 end
 set(gca,'XTick',1:N)
 set(gca,'XTickLabel',GroupingVariables);
-set(gca,'FontName','Constantia','FontSize',24);
+set(gca,'FontName','Calibri','FontSize',40);
 ylabel(label);
 
 
