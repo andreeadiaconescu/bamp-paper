@@ -20,14 +20,12 @@ if doModelComparison
 end
 if doBehavAnalysis
    bamp_extract_calculate_behaviour(options,'RT'); 
-   bamp_extract_calculate_behaviour(options,'accuracy');
-   bamp_extract_calculate_behaviour(options,'advice_taking');
 end
 if doCheckParameterCorrelations
     bamp_check_correlations_regressors(options);
 end
 if doParameterExtraction
-    bamp_extract_parameters_RT_create_table(options);
+    bamp_extract_parameters_HGF_RT_create_table(options);
     bamp_extract_calculate_MAPs(options,'omega3');
     bamp_extract_calculate_MAPs_RT(options,'be2');
 end

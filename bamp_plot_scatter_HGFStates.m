@@ -1,7 +1,6 @@
 function bamp_plot_scatter_HGFStates(Variables,Groups_Conditions,currentState,label)
 
 GroupingVariables = {'Stable','Volatile',...
-                     'Stable','Volatile',...
                      'Stable','Volatile'};
 
 figure;

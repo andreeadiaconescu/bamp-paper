@@ -119,7 +119,7 @@ c.irregular_intervals = false;
 % and the second implies neutrality between outcomes when it
 % is centered at 0.
 c.mu_0mu = [NaN, 0, 1];
-c.mu_0sa = [NaN, 1, 0];
+c.mu_0sa = [NaN, 0, 0];
 
 c.logsa_0mu = [NaN, log(0.006), log(4)];
 c.logsa_0sa = [NaN,          0,      0];
