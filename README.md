@@ -8,7 +8,7 @@ BAMP: Bayesian Models of Psychopathy (Collaboration with I. Brazil)
 Getting Started
 ---------------
 
-- BAMP: Run the analysis simply running bamp_main.
+- BAMP: Run the analysis simply running `bamp_main`.
 
 
 Details to take into account:
