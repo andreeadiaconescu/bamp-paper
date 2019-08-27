@@ -43,31 +43,31 @@ ylabel('Protected Exceedance Probabilities');
 disp(['Best model: ', num2str(find(model_posterior==max(model_posterior)))]);
 
 %% Family Inference
-load(options.family.template);
-perceptual_family=family_allmodels;
-perceptual_family.alpha0=[];
-perceptual_family.s_samp= [];
-perceptual_family.exp_r=[];
-perceptual_family.xp=[];
-perceptual_family.names=options.family.perceptual.labels;
-perceptual_family.partition = options.family.perceptual.partition;
-[family_models1,~] = spm_compare_families(models,perceptual_family);
-
-% Plot family-level inference results
-figure;
-H=family_models1.exp_r;
-N=numel(H);
-colors=jet(numel(H));
-for i=1:N
-    h=bar(i,H(i));
-    if i==1, hold on, end
-    set(h,'FaceColor',colors(i,:))
-end
-set(gca,'XTick',1:numel(perceptual_family.names))
-set(gca,'XTickLabel',options.family.perceptual.labels);
-ylabel('p(r|y)');
-
 if options.model.RT ~= true
+    load(options.family.template);
+    perceptual_family=family_allmodels;
+    perceptual_family.alpha0=[];
+    perceptual_family.s_samp= [];
+    perceptual_family.exp_r=[];
+    perceptual_family.xp=[];
+    perceptual_family.names=options.family.perceptual.labels;
+    perceptual_family.partition = options.family.perceptual.partition;
+    [family_models1,~] = spm_compare_families(models,perceptual_family);
+    
+    % Plot family-level inference results
+    figure;
+    H=family_models1.exp_r;
+    N=numel(H);
+    colors=jet(numel(H));
+    for i=1:N
+        h=bar(i,H(i));
+        if i==1, hold on, end
+        set(h,'FaceColor',colors(i,:))
+    end
+    set(gca,'XTick',1:numel(perceptual_family.names))
+    set(gca,'XTickLabel',options.family.perceptual.labels);
+    ylabel('p(r|y)');
+    
     responsemodelfamily1=perceptual_family;
     responsemodelfamily1=family_models1;
     responsemodelfamily1.alpha0=[];

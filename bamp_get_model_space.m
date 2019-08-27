@@ -8,15 +8,11 @@ if options.model.RT == true
     iCombPercResp(2,1)  = 2;
     iCombPercResp(3,1)  = 3;
     iCombPercResp(4,1)  = 4;
-    iCombPercResp(5,1)  = 5;
-    iCombPercResp(6,1)  = 6;
     
     iCombPercResp(1,2)  = 1;
     iCombPercResp(2,2)  = 1;
     iCombPercResp(3,2)  = 1;
     iCombPercResp(4,2)  = 1;
-    iCombPercResp(5,2)  = 1;
-    iCombPercResp(6,2)  = 1;
     
 else
     iCombPercResp = zeros(15,2); % 5 x 3
