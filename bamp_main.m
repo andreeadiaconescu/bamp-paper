@@ -14,7 +14,7 @@ fprintf('\n===\n\t Running group-level analysis and printing tables:\n\n');
 bamp_second_level(options);
 
 %% Analysis part 1
-options = bamp_options('RT');
+options = bamp_options('RT_and_Choice');
 fprintf('\n===\n\t Running the first level analysis (modelling trialwise choices and RTs:\n\n');
 
 loop_analyze_behaviour_local(options);

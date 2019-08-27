@@ -19,8 +19,6 @@ averageZCorr = mean(cell2mat(permute(averageCorr,[2 3 1])),3);
 averageGroupCorr = sibak_ifisherz(reshape(averageZCorr,size(corrMatrix,1)^2,1));
 finalCorr = reshape(averageGroupCorr,size(corrMatrix,1),...
         size(corrMatrix,2));
-figure;imagesc(finalCorr);
-caxis([-1 1]);
 title('Correlation Matrix, averaged over subjects');
 maximumCorr = max(max(finalCorr(~isinf(finalCorr))));
 fprintf('\n\n----- Maximum correlation is %s -----\n\n', ...
