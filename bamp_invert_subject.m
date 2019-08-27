@@ -34,11 +34,22 @@ for iModel = 1:nModels
         y_choice         = outputMatrix(:,3);
     end
     
-    
-    
-    est_bamp=tapas_fitModel(y_choice,input_u,[perceptual_models{iCombPercResp(iModel,1)},'_config'],...
-        [response_models{iCombPercResp(iModel,2)},'_config']);
-    
+    % Two subjects' data is not invertable for the tapas_hgf_binary_drift
+    % model with mu2_0 estimated. Thus, for these 2 subjects, we fix mu2_0.
+    if options.model.RT == 1 && iModel == 3
+        switch id
+            case {'C1710','A1718'}
+                est_bamp=tapas_fitModel(y_choice,input_u,['tapas_hgf_binary_drift_fix_mu20_config'],...
+                    [response_models{iCombPercResp(iModel,2)},'_config']);
+            otherwise
+                est_bamp=tapas_fitModel(y_choice,input_u,['tapas_hgf_binary_drift_config'],...
+                    [response_models{iCombPercResp(iModel,2)},'_config']);
+        end
+        
+    else
+        est_bamp=tapas_fitModel(y_choice,input_u,[perceptual_models{iCombPercResp(iModel,1)},'_config'],...
+            [response_models{iCombPercResp(iModel,2)},'_config']);
+    end
     est_bamp.cue_advice_space                      = piechart_fromfile;
     est_bamp.take_adv_overall                      = nansum(input_u_fromfile)./size(input_u,1);
     
