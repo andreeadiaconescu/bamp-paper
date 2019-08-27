@@ -1,11 +1,13 @@
-function options = bamp_options(ModelName)
+function options = bamp_options(ModelCategory)
 
 options = [];
 
 options.doRunOnArton = false; % parallelization on other cluster with ssd scratch disk
+
 if nargin < 1
-    ModelName = 'HGF_Reduced1';
+    ModelCategory = 'RT_and_Choice'; % other option: 'Choice'
 end
+
 %% User folders-----------------------------------------------------------%
 [~, uid] = unix('whoami');
 switch uid(1: end-1)
@@ -15,6 +17,7 @@ switch uid(1: end-1)
         configroot       = fullfile(fileparts(mfilename('fullpath')), '/Utils');
 end
 
+%% Paths
 
 % create folders, if non existent, and don't give warnings, if they do
 % (won't be overwritten!)
@@ -31,10 +34,11 @@ options.model.pathResponse   = fullfile([options.code,'/Response_Models']);
 addpath(genpath(options.code));
 addpath('/Users/drea/Documents/Toolboxes/spm12')
 
+%% Analysis steps to be run
 options.pipe.executeStepsPerSubject = {
     'inversion'
-    'behaviour'};
-options.pipe.executeStepsPerGroup   = [1 1 1 1 0];
+    'behaviour'}; % plotting is also an option here
+options.pipe.executeStepsPerGroup   = [1 1 1 1];
 options.family.template = fullfile(options.configroot,'family_allmodels.mat');
 
 %% Specific to IOIO task
@@ -57,23 +61,28 @@ options.task.helpfulPhase2 = vertcat(zeros(147,1), ones(42,1));
 options.task.volatilePhase = vertcat(zeros(42,1), ones(105,1), zeros(42,1));
 options.task.switchHelpful = vertcat(zeros(142,1), ones(6,1), zeros(41,1));
 
-options.model.RT  = 1;
-options.model.winningPerceptual = 'tapas_hgf_binary_reduced_omega'; 
+%% Model Category
+switch ModelCategory
+    case 'RT_and_Choice'
+        options.model.RT  = 1;
+    case 'Choice'
+        options.model.RT  = 0;
+end
+
 if options.model.RT == true
-    options.model.winningPerceptual = 'tapas_hgf_binary_drift'; % 'tapas_hgf_binary_reduced_omega';
+    options.model.winningPerceptual = 'tapas_hgf_binary_drift';
     options.model.winningResponse   = 'tapas_logrt_linear_binary';
 else
+    options.model.winningPerceptual = 'tapas_hgf_binary_reduced_omega';
     options.model.winningResponse   = 'tapas_ioio_unitsq_sgm';
 end
 
 
-options.model.all =  {'HGF_R1','HGF_R2','HGF_Drift','HGF_2L','RW'};
-
-options.model.typeModel         = char(ModelName);
+ModelName                       = 'HGF_Reduced1';
 options.errorfile               = 'Error_FirstLevel.mat';
 
-
-switch options.model.typeModel
+%% Details about the models available and included here
+switch ModelName
     case 'HGF'
         options.model.perceptualModels   = 'tapas_hgf_binary';
         options.model.responseModels   = ...
@@ -92,7 +101,7 @@ switch options.model.typeModel
             {'tapas_ioio_unitsq_sgm','tapas_ioio_cue_unitsq_sgm',...
             'tapas_ioio_advice_unitsq_sgm'};
     case 'HGF_2L'
-    options.model.perceptualModels   = 'tapas_hgf_binary_novol';
+        options.model.perceptualModels   = 'tapas_hgf_binary_novol';
         options.model.responseModels   = ...
             {'tapas_ioio_unitsq_sgm','tapas_ioio_cue_unitsq_sgm',...
             'tapas_ioio_advice_unitsq_sgm'};
@@ -129,11 +138,10 @@ switch options.model.typeModel
 end
 
 
-
+%% Models inverted: when fitting both RT and choice or choice only. The model space is the same, but for the RT models, we do not include RW
 if options.model.RT == true
     options.model.allperceptualModels = {'tapas_hgf_binary_reduced_omega','tapas_hgf_binary_reduced_kappa',...
-                                         'tapas_hgf_binary_drift','tapas_hgf_binary_ar1_level2',...
-                                         'tapas_hgf_binary_ar1_level3','tapas_hgf_binary_novol'};
+        'tapas_hgf_binary_drift','tapas_hgf_binary_novol'};
     options.model.allresponseModels = ...
         { 'tapas_logrt_linear_binary', 'tapas_logrt_linear_binary_cue',...
         'tapas_logrt_linear_binary_advice','tapas_logrt_linear_binary_simple', 'tapas_logrt_linear_binary_simple_cue',...
@@ -146,15 +154,15 @@ else
         'tapas_ioio_unitsq_sgm','tapas_ioio_cue_unitsq_sgm','tapas_ioio_advice_unitsq_sgm'};
 end
 
+%% Model names and labels
+options.model.all =  {'HGF_R1','HGF_R2','HGF_Drift','HGF_2L','RW'};
 
 if options.model.RT == true
-    options.family.perceptual.labels = {'HGF_R1','HGF_R2','ConstantDrift','Drift2','Drift3','HGF_NoVolatility'};
-    options.family.perceptual.partition = [1 2 3 4 5 6];
+    options.family.perceptual.labels = {'HGF_R1','HGF_R2','ConstantDrift','HGF_NoVolatility'};
+    options.family.perceptual.partition = [1 2 3 4];
     
-    options.family.responsemodels1.labels = {'No Drift','Drift'};
-    options.family.responsemodels1.partition = [1 1 2 2 2 1];
     options.model.labels = ...
-        {'HGF1','HGF2','ConstantDrift','Drift2','Drift3','HGF_NoVolatility'};
+        {'HGF1','HGF2','ConstantDrift','HGF_NoVolatility'};
 else
     options.family.perceptual.labels = {'HGF_R1','HGF_R2','HGF_Drift','HGF_2L','RW'};
     options.family.perceptual.partition = [1 1 1 2 2 2 3 3 3 4 4 4 5 5 5];
@@ -168,11 +176,11 @@ else
         'RW_Both','Cue','RW_Advice'};
 end
 
+%% Parameter names and labels
 % Parameters
 options.model.hgf   = {'mu2_0','kappa','omega_2','omega_3','rho'};
 options.model.rw    = {'mu2_0','alpha'};
 options.model.ar1   = {'m3','phi3','kappa','omega_2','omega_3'};
-
 options.model.sgm   = {'zeta_1','zeta_2'};
 
 %% Subject IDs ------------------------------------------------------------%

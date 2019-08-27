@@ -1,4 +1,4 @@
-function bamp_second_level(options)
+function bamp_second_level_RT(options)
 %Performs all analysis steps at the group level
 %   IN:    
 %           options     as set by bamp_options();
@@ -27,7 +27,8 @@ if doCheckParameterCorrelations
     bamp_check_correlations_regressors(options);
 end
 if doParameterExtraction
-    bamp_extract_parameters_create_table(options);
+    bamp_extract_parameters_RT_create_table(options);
     bamp_extract_calculate_MAPs(options,'omega3');
+    bamp_extract_calculate_MAPs_RT(options,'be2');
 end
 
