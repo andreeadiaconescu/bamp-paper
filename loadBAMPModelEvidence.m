@@ -3,7 +3,7 @@ function [models_bamp] = loadBAMPModelEvidence(options,subjects)
 perceptual_models = options.model.allperceptualModels';
 response_models   = options.model.allresponseModels';
 
-[iCombPercResp]  = bamp_get_model_space;
+[iCombPercResp]  = bamp_get_model_space(options);
 nModels          = size(iCombPercResp,1);
 
 nSubjects = numel(subjects);

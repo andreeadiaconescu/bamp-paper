@@ -4,7 +4,7 @@ details = bamp_ioio_subjects(id, options);
 perceptual_models = options.model.allperceptualModels';
 response_models   = options.model.allresponseModels';
 
-[iCombPercResp]  = bamp_get_model_space;
+[iCombPercResp]  = bamp_get_model_space(options);
 nModels          = size(iCombPercResp,1);
 
 diagnostics = false;

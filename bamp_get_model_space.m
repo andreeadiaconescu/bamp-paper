@@ -1,9 +1,7 @@
-function [iCombPercResp]  = bamp_get_model_space
+function [iCombPercResp]  = bamp_get_model_space(options)
 
-options = bamp_options();
-if options.model.RT == true
-    
-    iCombPercResp = zeros(6,2); % Only integrated models here
+if options.model.RT == 1   
+    iCombPercResp = zeros(4,2); % Only integrated models here
     iCombPercResp(1,1)  = 1;
     iCombPercResp(2,1)  = 2;
     iCombPercResp(3,1)  = 3;
