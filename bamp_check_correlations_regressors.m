@@ -17,7 +17,7 @@ save(fullfile(options.resultroot, 'bampsubjects_parameter_correlations.mat'), ..
 % Two subjects' data is not invertable for the tapas_hgf_binary_drift
 % model with mu2_0 estimated. Thus, these 2 subjects are excluded from the average computation.
 if options.model.RT == 1
-    averageCorr([3 69]) = [];
+    averageCorr([3 73]) = []; % subjects who use the drift model with mu20 fixed
 end
 
 averageZCorr = mean(cell2mat(permute(averageCorr,[2 3 1])),3);

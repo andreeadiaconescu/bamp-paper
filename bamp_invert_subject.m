@@ -46,6 +46,16 @@ for iModel = 1:nModels
                     [response_models{iCombPercResp(iModel,2)},'_config']);
         end
         
+    elseif options.model.RT == 0 && iModel == 12
+        switch id
+            case {'C1920SL'}
+                est_bamp=tapas_fitModel(y_choice,input_u,['tapas_hgf_binary_drift_fix_mu20_config'],...
+                    [response_models{iCombPercResp(iModel,2)},'_config']);
+            otherwise
+                est_bamp=tapas_fitModel(y_choice,input_u,['tapas_hgf_binary_drift_config'],...
+                    [response_models{iCombPercResp(iModel,2)},'_config']);
+        end
+        
     else
         est_bamp=tapas_fitModel(y_choice,input_u,[perceptual_models{iCombPercResp(iModel,1)},'_config'],...
             [response_models{iCombPercResp(iModel,2)},'_config']);
