@@ -24,7 +24,7 @@ averageZCorr = mean(cell2mat(permute(averageCorr,[2 3 1])),3);
 averageGroupCorr = sibak_ifisherz(reshape(averageZCorr,size(corrMatrix,1)^2,1));
 finalCorr = reshape(averageGroupCorr,size(corrMatrix,1),...
     size(corrMatrix,2));
-title('Correlation Matrix, averaged over subjects');
+
 maximumCorr = max(max(finalCorr(~isinf(finalCorr))));
 fprintf('\n\n----- Maximum correlation is %s -----\n\n', ...
     num2str(maximumCorr));
@@ -32,7 +32,7 @@ minimumCorr = min(min(finalCorr(~isinf(finalCorr))));
 fprintf('\n\n----- Minimum correlation is %s -----\n\n', ...
     num2str(minimumCorr));
 finalCorr(isnan(finalCorr))=1;
-figure;imagesc(finalCorr,[-1 1]);
+imagesc(finalCorr,[-1 1]);
 
 if options.model.RT == 1
     parametersModel = {'\mu_2','\omega_2','\omega_3','\rho','\zeta_1','\zeta_2','\beta_0','\beta_1',...
