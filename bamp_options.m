@@ -38,7 +38,7 @@ addpath('/Users/drea/Documents/Toolboxes/spm12')
 options.pipe.executeStepsPerSubject = {
     'inversion'
     'behaviour'}; % plotting is also an option here
-options.pipe.executeStepsPerGroup   = [1 1 1 1];
+options.pipe.executeStepsPerGroup   = [0 1 1 1];
 options.family.template = fullfile(options.configroot,'family_allmodels.mat');
 
 %% Specific to IOIO task
