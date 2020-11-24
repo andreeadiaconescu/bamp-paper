@@ -42,7 +42,7 @@ options.pipe.executeStepsPerGroup   = [1 1 1 1];
 options.family.template = fullfile(options.configroot,'family_allmodels.mat');
 
 %% Specific to IOIO task
-options.cue                    = fullfile(options.configroot,'DMPAD_N189_cue.txt');
+options.cue                    = fullfile(options.configroot,'DMPAD_N189_cue.txt'); % specify the IOIO design here
 options.task.cueCodes          = [9:14];
 options.task.cueProbs          = [0.75:-0.10:0.25];
 options.task.probabilities     = [0.70,0.80,0.50,0.30,0.20,0.30,0.50,0.70,0.80];
@@ -70,8 +70,8 @@ switch ModelCategory
 end
 
 if options.model.RT == true
-    options.model.winningPerceptual = 'tapas_hgf_binary_drift';
-    options.model.winningResponse   = 'tapas_logrt_linear_binary';
+    options.model.winningPerceptual = 'bamp_hgf_binary_drift';
+    options.model.winningResponse   = 'bamp_logrt_linear_binary';
 else
     options.model.winningPerceptual = 'tapas_hgf_binary_reduced_omega';
     options.model.winningResponse   = 'tapas_ioio_unitsq_sgm';
@@ -80,6 +80,12 @@ end
 
 ModelName                       = 'HGF_Reduced1';
 options.errorfile               = 'Error_FirstLevel.mat';
+
+%% Model simulations
+if options.model.RT == true
+    options.model.simPerceptual = 'tapas_hgf_binary_drift';
+    options.model.simResponse   = 'bamp_logrt_linear_binary';
+end
 
 %% Details about the models available and included here
 switch ModelName
@@ -140,12 +146,9 @@ end
 
 %% Models inverted: when fitting both RT and choice or choice only. The model space is the same, but for the RT models, we do not include RW
 if options.model.RT == true
-    options.model.allperceptualModels = {'tapas_hgf_binary_reduced_omega','tapas_hgf_binary_reduced_kappa',...
-        'tapas_hgf_binary_drift','tapas_hgf_binary_novol'};
+    options.model.allperceptualModels = {'bamp_hgf_binary_drift'};
     options.model.allresponseModels = ...
-        { 'tapas_logrt_linear_binary', 'tapas_logrt_linear_binary_cue',...
-        'tapas_logrt_linear_binary_advice','tapas_logrt_linear_binary_simple', 'tapas_logrt_linear_binary_simple_cue',...
-        'tapas_logrt_linear_binary_simple_advice'};
+        { 'bamp_logrt_linear_binary'};
 else
     options.model.allperceptualModels = {'tapas_hgf_binary','tapas_hgf_binary_reduced_omega','tapas_hgf_binary_reduced_kappa',...
         'tapas_hgf_binary_drift', 'tapas_hgf_binary_novol','tapas_rw_binary'};
@@ -155,32 +158,23 @@ else
 end
 
 %% Model names and labels
-options.model.all =  {'HGF_R1','HGF_R2','HGF_Drift','HGF_2L','RW'};
 
-if options.model.RT == true
-    options.family.perceptual.labels = {'HGF_R1','HGF_R2','ConstantDrift','HGF_NoVolatility'};
-    options.family.perceptual.partition = [1 2 3 4];
-    
-    options.model.labels = ...
-        {'HGF1','HGF2','ConstantDrift','HGF_NoVolatility'};
-else
-    options.family.perceptual.labels = {'HGF', 'HGF_R1','HGF_R2','HGF_Drift','HGF_2L','RW'};
-    options.family.perceptual.partition = [1 1 1 2 2 2 3 3 3 4 4 4 5 5 5 6 6 6];
-    
-    options.family.responsemodels1.labels = {'Both','Cue','Advice'};
-    options.family.responsemodels1.partition = [1 2 3 1 2 3 1 2 3 1 2 3 1 2 3 1 2 3];
-    options.model.labels = ...
-        {'HGF', 'Cue','Advice',...
-        'HGF1 Omega', 'Cue','Advice',...
-        'HGF2 Kappa', 'Cue','Advice',...
-        'Drift','Cue','Advice',...
-        '2LV HGF', 'Cue','Advice',...
-        'RW','Cue','Advice'};
-end
+options.family.perceptual.labels = {'HGF', 'HGF_R1','HGF_R2','HGF_Drift','HGF_2L','RW'};
+options.family.perceptual.partition = [1 1 1 2 2 2 3 3 3 4 4 4 5 5 5 6 6 6];
+
+options.family.responsemodels1.labels = {'Both','Cue','Advice'};
+options.family.responsemodels1.partition = [1 2 3 1 2 3 1 2 3 1 2 3 1 2 3 1 2 3];
+options.model.labels = ...
+    {'HGF', 'Cue','Advice',...
+    'HGF1 Omega', 'Cue','Advice',...
+    'HGF2 Kappa', 'Cue','Advice',...
+    'Drift','Cue','Advice',...
+    '2LV HGF', 'Cue','Advice',...
+    'RW','Cue','Advice'};
 
 %% Parameter names and labels
 % Parameters
-options.model.hgf   = {'mu2_0','kappa','omega_2','omega_3','rho'};
+options.model.hgf   = {'omega_2','omega_3'};
 options.model.rw    = {'mu2_0','alpha'};
 options.model.ar1   = {'m3','phi3','kappa','omega_2','omega_3'};
 options.model.sgm   = {'zeta_1','zeta_2'};
