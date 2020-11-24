@@ -17,57 +17,22 @@ switch comparisonType
 end
 
 % pairs of perceptual and response model
-PerceptualModel_Parameters = options.model.hgf;
 subjectsIncluded           = subjects;
 nSubjects                  = numel(subjectsIncluded);
 
-switch options.model.winningResponse
-    case 'tapas_logrt_linear_binary_simple'
-        ResponseModel_Parameters   = {'ze1','ze2','beta1'};
-        for iSubject = 1:nSubjects
-            id = char(subjects(iSubject));
-            details = bamp_ioio_subjects(id, options);
-            tmp = load(fullfile(details.behav.pathResults,[options.model.winningPerceptual, ...
-                options.model.winningResponse,'.mat']), 'est_bamp','-mat');
-            variables_bamp{iSubject,1} = tmp.est_bamp.p_prc.mu_0(2);
-            variables_bamp{iSubject,2} = tmp.est_bamp.p_prc.ka(2);
-            variables_bamp{iSubject,3} = tmp.est_bamp.p_prc.om(2);
-            variables_bamp{iSubject,4} = tmp.est_bamp.p_prc.om(3);
-            variables_bamp{iSubject,5} = tmp.est_bamp.p_prc.rho(2);
-            variables_bamp{iSubject,6} = tmp.est_bamp.p_obs.ze1;
-            variables_bamp{iSubject,7} = tmp.est_bamp.p_obs.ze2;
-            variables_bamp{iSubject,8} = tmp.est_bamp.p_obs.be1;
-        end
-        
-    case 'tapas_logrt_linear_binary'
-        ResponseModel_Parameters   = {'ze1','ze2','beta1','beta2','beta3','beta4','ze3'};
-        for iSubject = 1:nSubjects
-            id = char(subjects(iSubject));
-            details = bamp_ioio_subjects(id, options);
-            tmp = load(fullfile(details.behav.pathResults,[options.model.winningPerceptual, ...
-                options.model.winningResponse,'.mat']), 'est_bamp','-mat');
-            variables_bamp{iSubject,1} = tmp.est_bamp.p_prc.mu_0(2);
-            variables_bamp{iSubject,2} = tmp.est_bamp.p_prc.ka(2);
-            variables_bamp{iSubject,3} = tmp.est_bamp.p_prc.om(2);
-            variables_bamp{iSubject,4} = tmp.est_bamp.p_prc.om(3);
-            variables_bamp{iSubject,5} = tmp.est_bamp.p_prc.rho(2);
-            variables_bamp{iSubject,6} = tmp.est_bamp.p_obs.ze1;
-            variables_bamp{iSubject,7} = tmp.est_bamp.p_obs.ze2;
-            variables_bamp{iSubject,8} = tmp.est_bamp.p_obs.be1;
-            variables_bamp{iSubject,9} = tmp.est_bamp.p_obs.be2;
-            variables_bamp{iSubject,10} = tmp.est_bamp.p_obs.be3;
-            variables_bamp{iSubject,11} = tmp.est_bamp.p_obs.be4;
-            variables_bamp{iSubject,12} = tmp.est_bamp.p_obs.ze;
-        end
+ResponseModel_Parameters   = {'ze1','ze2','sigma1','mu3'};
+for iSubject = 1:nSubjects
+    id = char(subjects(iSubject));
+    details = bamp_ioio_subjects(id, options);
+    tmp = load(fullfile(details.behav.pathResults,[options.model.winningPerceptual, ...
+        options.model.winningResponse,'.mat']), 'est_bamp','-mat');
+    variables_bamp{iSubject,1} = tmp.est_bamp.p_prc.om(2);
+    variables_bamp{iSubject,2} = tmp.est_bamp.p_prc.om(3);
+    variables_bamp{iSubject,3} = tmp.est_bamp.p_obs.ze1;
+    variables_bamp{iSubject,4} = tmp.est_bamp.p_obs.ze2;
+    variables_bamp{iSubject,5} = tmp.est_bamp.p_obs.be1;
+    variables_bamp{iSubject,6} = tmp.est_bamp.p_obs.be3;
 end
-
-
-
-nParameters    = [PerceptualModel_Parameters';ResponseModel_Parameters'];
-
-
-
-
 
 variables_all = [cell2mat(variables_bamp)];
 save(fullfile(options.resultroot, [comparisonType '_MAP_estimates_HGF_RT.mat']), ...
