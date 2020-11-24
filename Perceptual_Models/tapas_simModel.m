@@ -186,7 +186,7 @@ if nargin > 4
     obs_fun = str2func([r.c_sim.obs_model, '_sim']);
     
     % Simulate decisions
-    [r.y,r.prob] = obs_fun(r, infStates, r.p_obs.p);
+    [r.y(:,1),r.y(:,2),r.prob] = obs_fun(r, infStates, r.p_obs.p);
 
 end
 
