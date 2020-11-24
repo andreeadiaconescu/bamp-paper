@@ -63,16 +63,16 @@ for iSubject = 1:nSubjects
         y_choice         = outputMatrix(:,3);
     end
     
-    est_bamp=tapas_fitModel(y_choice,input_u,[options.model.winningPerceptual,'_config'],...
-            [options.model.winningResponse,'_config']);
+    est_bamp=tapas_fitModel(y_choice,input_u,[options.model.simPerceptual,'_config'],...
+            [options.model.simResponse,'_config']);
         bamp_plotTraj(est_bamp,options);
-    sim = tapas_simModel(est_bamp.u,options.model.winningPerceptual,...
-        est_bamp.p_prc.p,options.model.winningResponse,est_bamp.p_obs.p);
+    sim = tapas_simModel(est_bamp.u,options.model.simPerceptual,...
+        est_bamp.p_prc.p,options.model.simResponse,est_bamp.p_obs.p);
     y_responses = sim.y;
     input_u     = sim.u;
     
-    sim_bamp=tapas_fitModel(y_responses,input_u,[options.model.winningPerceptual,'_config'],...
-        [options.model.winningResponse,'_config']);
+    sim_bamp=tapas_fitModel(y_responses,input_u,[options.model.simPerceptual,'_config'],...
+        [options.model.simResponse,'_config']);
     
     variables_bamp{iSubject,1} = est_bamp.p_prc.om(2);
     variables_bamp{iSubject,2} = est_bamp.p_prc.om(3);

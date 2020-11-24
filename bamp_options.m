@@ -14,7 +14,7 @@ switch uid(1: end-1)
     case 'drea'
         dataroot         = '/Users/drea/Documents/Collaborations/IntiBrazil/DATA_SL';
         resultroot       = '/Users/drea/Documents/Collaborations/IntiBrazil/Results';
-        configroot       = fullfile(fileparts(mfilename('fullpath')), '/Utils');
+        configroot       = fullfile(fileparts(mfilename('fullpath')), '/Model/Utils');
 end
 
 %% Paths
@@ -38,7 +38,7 @@ addpath('/Users/drea/Documents/Toolboxes/spm12')
 options.pipe.executeStepsPerSubject = {
     'inversion'
     'behaviour'}; % plotting is also an option here
-options.pipe.executeStepsPerGroup   = [0 1 1 1];
+options.pipe.executeStepsPerGroup   = [0 1 1 1 1];
 options.family.template = fullfile(options.configroot,'family_allmodels.mat');
 
 %% Specific to IOIO task

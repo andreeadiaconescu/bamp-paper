@@ -1,16 +1,9 @@
 function [iCombPercResp]  = bamp_get_model_space(options)
 
 if options.model.RT == 1   
-    iCombPercResp = zeros(4,2); % Only integrated models here
+    iCombPercResp = zeros(1,1); % Only integrated models here
     iCombPercResp(1,1)  = 1;
-    iCombPercResp(2,1)  = 2;
-    iCombPercResp(3,1)  = 3;
-    iCombPercResp(4,1)  = 4;
-    
     iCombPercResp(1,2)  = 1;
-    iCombPercResp(2,2)  = 1;
-    iCombPercResp(3,2)  = 1;
-    iCombPercResp(4,2)  = 1;
     
 else
     iCombPercResp = zeros(18,2); % 5 x 3
