@@ -37,7 +37,8 @@ iValid           = logical(outputMatrix(:,end));
                 adviceTakingSwitch,...
                 go_with_volatile_advice, go_against_volatile_advice,...
                 go_with_stable_helpful_advice1,go_with_stable_helpful_advice2,...
-                take_adv_overall,RTStable,RTVolatile,AccuracyStable,AccuracyVolatile] ...
+                take_adv_overall,RTStable,RTVolatile,AccuracyStable,AccuracyVolatile,RTStableAdvice1, RTStableAdvice2,...
+                adviceBlock1, RTBlock1,adviceBlock2, RTBlock2,adviceBlock3,RTBlock3,adviceBlock4,RTBlock4,adviceBlock5,RTBlock5] ...
                 = getBAMPData(input_u,y_choice,RT,iValid,options);
             
 if isempty(input_u) % cue and cue advice are not subject-dependent, have to check inputs
@@ -91,6 +92,19 @@ behav_bamp.RTvolatile                            = RTVolatile;
 behav_bamp.AccuracyStable                        = AccuracyStable;
 behav_bamp.AccuracyVolatile                      = AccuracyVolatile;
 behav_bamp.probe                                 = probes';
+behav_bamp.RTStableAdvice1                       = RTStableAdvice1;
+behav_bamp.RTStableAdvice2                       = RTStableAdvice2;
+behav_bamp.RTBlock1                       = RTBlock1;
+behav_bamp.RTBlock2                       = RTBlock2;
+behav_bamp.RTBlock3                       = RTBlock3;
+behav_bamp.RTBlock4                       = RTBlock4;
+behav_bamp.RTBlock5                       = RTBlock5;
+
+behav_bamp.adviceBlock1                       = adviceBlock1;
+behav_bamp.adviceBlock2                       = adviceBlock2;
+behav_bamp.adviceBlock3                       = adviceBlock3;
+behav_bamp.adviceBlock4                       = adviceBlock4;
+behav_bamp.adviceBlock5                       = adviceBlock5;
 
 save(fullfile(details.behav.pathResults,[details.dirSubject, '_behavVariables.mat']), 'behav_bamp','-mat');
 end

@@ -33,7 +33,15 @@ switch currentVAR
     case 'advice_phases'
         currentState = 'advice_phases';
         label        = 'Going with Advice (%)';
+        selectedColumn = [14:15];
+    case 'RT_block'
+        currentState = 'RT_block';
+        label        = 'RT';
         selectedColumn = [7:8];
+    case 'advice_block'
+        currentState = 'advice_block';
+        label        = 'Going with Advice (%)';
+        selectedColumn = [9:10];
 end
 
 Groups            = [ones(nCon,1); 2*ones(nPsych, 1); 3*ones(nAnti, 1)];
