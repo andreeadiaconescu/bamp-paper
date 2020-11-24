@@ -129,7 +129,7 @@ c.logsa_0sa = [NaN,          0,      0];
 % Undefined (therefore NaN) at the first level.
 % Fix this to zero to turn off drift.
 c.rhomu = [NaN, 0, 0];
-c.rhosa = [NaN, 1, 0];
+c.rhosa = [NaN, 0, 0];
 
 % Kappas
 % Format: row vector of length n_levels-1.
