@@ -27,6 +27,6 @@ end
 if doParameterExtraction
     bamp_extract_parameters_HGF_RT_create_table(options);
     bamp_extract_calculate_MAPs(options,'omega3');
-    bamp_extract_calculate_MAPs_RT(options,'be2');
+    bamp_extract_calculate_MAPs(options,'sigma');
 end
 

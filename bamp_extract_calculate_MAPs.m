@@ -2,11 +2,8 @@ function bamp_extract_calculate_MAPs(options,currentVAR)
 
 
 if nargin < 2
-    currentVAR = 'mu20';
+    currentVAR = 'omega3';
 end
-
-allSubjects      =  [options.controls, ...
-    options.psychopathy, options.antisocial];
 
 
 % variables needed for plotting
@@ -15,31 +12,24 @@ nAnti                  = length(options.antisocial);
 nPsych                 = length(options.psychopathy);
 
 % Dependent Variables:
-[zeta]                 = bamp_load_zeta(options,allSubjects);
-[perceptualParameters] = bamp_load_parameters(options,allSubjects);
+[variables_all] = bamp_extract_parameters_HGF_RT_create_table(options);
 
 switch currentVAR
-    case 'mu20'
-        curr_var                = perceptualParameters(:,1);
-        label                   = '\mu{_2}';
-    case 'ka'
-        curr_var                = perceptualParameters(:,2);
-        label                   = '\kappa';
     case 'omega2'
-        curr_var                = perceptualParameters(:,3);
+        curr_var                = variables_all(:,1);
         label                   = '\omega{_2}';
     case 'omega3'
-        curr_var                = perceptualParameters(:,4);
+        curr_var                = variables_all(:,2);
         label                   = '\omega{_3}';
-    case 'rho'
-        curr_var                = perceptualParameters(:,5);
-        label                   = 'rho';
     case 'zeta'
-        curr_var                = zeta(:,1);
+        curr_var                = variables_all(:,3);
         label                   = '\zeta';
-    case 'beta'
-        curr_var                = zeta(:,2);
-        label                   = '\beta';
+    case 'sigma'
+        curr_var                = variables_all(:,5);
+        label                   = '\sigma{_1}';
+    case 'volatility'
+        curr_var                = variables_all(:,6);
+        label                   = '\mu{_3}';
 end
 
 Groups            = [ones(nCon,1); 2*ones(nPsych, 1); 3*ones(nAnti, 1)];
