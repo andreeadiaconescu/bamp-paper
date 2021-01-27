@@ -70,7 +70,7 @@ switch ModelCategory
 end
 
 if options.model.RT == true
-    options.model.winningPerceptual = 'bamp_hgf_binary_drift';
+    options.model.winningPerceptual = 'bamp_ehgf_binary_ar1';
     options.model.winningResponse   = 'bamp_logrt_linear_binary';
 else
     options.model.winningPerceptual = 'tapas_hgf_binary_reduced_omega';
@@ -80,12 +80,6 @@ end
 
 ModelName                       = 'HGF_Reduced1';
 options.errorfile               = 'Error_FirstLevel.mat';
-
-%% Model simulations
-if options.model.RT == true
-    options.model.simPerceptual = 'tapas_hgf_binary_drift';
-    options.model.simResponse   = 'bamp_logrt_linear_binary';
-end
 
 %% Details about the models available and included here
 switch ModelName
@@ -146,9 +140,9 @@ end
 
 %% Models inverted: when fitting both RT and choice or choice only. The model space is the same, but for the RT models, we do not include RW
 if options.model.RT == true
-    options.model.allperceptualModels = {'bamp_hgf_binary_drift'};
+    options.model.allperceptualModels = {'bamp_hgf_binary_drift','bamp_ehgf_binary_ar1','tapas_rw_binary'};
     options.model.allresponseModels = ...
-        { 'bamp_logrt_linear_binary'};
+        { 'bamp_logrt_linear_binary','bamp_rw_linear_binary'};
 else
     options.model.allperceptualModels = {'tapas_hgf_binary','tapas_hgf_binary_reduced_omega','tapas_hgf_binary_reduced_kappa',...
         'tapas_hgf_binary_drift', 'tapas_hgf_binary_novol','tapas_rw_binary'};
@@ -158,25 +152,32 @@ else
 end
 
 %% Model names and labels
-
-options.family.perceptual.labels = {'HGF', 'HGF_R1','HGF_R2','HGF_Drift','HGF_2L','RW'};
-options.family.perceptual.partition = [1 1 1 2 2 2 3 3 3 4 4 4 5 5 5 6 6 6];
-
-options.family.responsemodels1.labels = {'Both','Cue','Advice'};
-options.family.responsemodels1.partition = [1 2 3 1 2 3 1 2 3 1 2 3 1 2 3 1 2 3];
-options.model.labels = ...
-    {'HGF', 'Cue','Advice',...
-    'HGF1 Omega', 'Cue','Advice',...
-    'HGF2 Kappa', 'Cue','Advice',...
-    'Drift','Cue','Advice',...
-    '2LV HGF', 'Cue','Advice',...
-    'RW','Cue','Advice'};
+if options.model.RT == true
+    options.family.perceptual.labels = {'HGF', 'HGF_AR1','RW'};
+    options.family.perceptual.partition = [1 2 3];
+    options.family.responsemodels1.labels = {'Expanded','Reduced',};
+    options.family.responsemodels1.partition = [1 1 2];
+    options.model.labels = ...
+        {'HGF', 'HGF_AR1','RW'};
+else
+    options.family.perceptual.labels = {'HGF', 'HGF_R1','HGF_R2','HGF_Drift','HGF_2L','RW'};
+    options.family.perceptual.partition = [1 1 1 2 2 2 3 3 3 4 4 4 5 5 5 6 6 6];
+    options.family.responsemodels1.labels = {'Both','Cue','Advice'};
+    options.family.responsemodels1.partition = [1 2 3 1 2 3 1 2 3 1 2 3 1 2 3 1 2 3];
+    options.model.labels = ...
+        {'HGF', 'Cue','Advice',...
+        'HGF1 Omega', 'Cue','Advice',...
+        'HGF2 Kappa', 'Cue','Advice',...
+        'Drift','Cue','Advice',...
+        '2LV HGF', 'Cue','Advice',...
+        'RW','Cue','Advice'};
+end
 
 %% Parameter names and labels
 % Parameters
 options.model.hgf   = {'omega_2','omega_3'};
 options.model.rw    = {'mu2_0','alpha'};
-options.model.ar1   = {'m3','phi3','kappa','omega_2','omega_3'};
+options.model.ar1   = {'omega_2','omega_3','m_3'};
 options.model.sgm   = {'zeta_1','zeta_2'};
 
 %% Subject IDs ------------------------------------------------------------%
@@ -184,7 +185,6 @@ options.model.sgm   = {'zeta_1','zeta_2'};
 options = subject_details(options);
 %% Subjects with specific name rules
     function detailsOut = subject_details(detailsIn)
-        
         detailsOut = detailsIn;
         detailsOut.offenders=...
             {'A1701','A1702','A1703','A1704','A1705','A1706',...
