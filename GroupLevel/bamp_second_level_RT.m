@@ -33,6 +33,6 @@ if doCheckParameterCorrelations
 end
 if doParameterExtraction
     bamp_extract_parameters_HGF_RT_create_table(options);
-    bamp_extract_calculate_MAPs(options,'omega3');
+    bamp_extract_calculate_MAPs(options,'m3');
 end
 

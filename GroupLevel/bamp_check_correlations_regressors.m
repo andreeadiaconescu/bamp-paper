@@ -27,10 +27,10 @@ minimumCorr = min(min(finalCorr(~isinf(finalCorr))));
 fprintf('\n\n----- Minimum correlation is %s -----\n\n', ...
     num2str(minimumCorr));
 finalCorr(isnan(finalCorr))=1;
-imagesc(finalCorr,[-1 1]);
+figure; imagesc(finalCorr,[-1 1]);
 
 if options.model.RT == 1
-    parametersModel = {'mu2_0','\omega_2','rho','\omega_3','\zeta_1','\zeta_2','\beta_0','\beta_1',...
+    parametersModel = {'mu2_0','\omega_2','\omega_3','m_3','\zeta_1','\zeta_2','\beta_0','\beta_1',...
         '\beta_2','\beta_3','\zeta_3'};
 else
     parametersModel = {'\mu_2','\omega_2','\omega_3','\zeta','\beta'};
