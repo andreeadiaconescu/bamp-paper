@@ -2,16 +2,16 @@ function bamp_simulate_from_empiricalData_PerpPlot(perceptualVariables,options)
 
 
 %% Plot slopes
-yLabelArray    = {'\omega_2','\omega_3'};
-colourArray    = {'b', 'r'};
-xLimitArray    = {[-Inf Inf], [-Inf Inf]};
-yLimitArray    = {[-Inf Inf], [-Inf Inf]};
+yLabelArray    = {'\omega_2','\omega_3','m_3'};
+colourArray    = {'b', 'r','g'};
+xLimitArray    = {[-Inf Inf], [-Inf Inf],[-Inf Inf]};
+yLimitArray    = {[-Inf Inf], [-Inf Inf],[-Inf Inf]};
 
 parameterArray = yLabelArray;
 nParameters    = size(parameterArray,2);
 figure;
 for iParameter = 1:nParameters
-    subplot(2,1,iParameter);
+    subplot(size(yLabelArray,2),1,iParameter);
     X = perceptualVariables(:,iParameter);
     Y = perceptualVariables(:,iParameter + nParameters);
     

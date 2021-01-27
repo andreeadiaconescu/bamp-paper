@@ -21,9 +21,9 @@ end
 nSubjects = numel(subjects);        
 
 % parameters and subjects
-Parameters                    =  {'om2','om3'};
+Parameters                    =  {'om2','om3','m3'};
 ResponseModelParameters       =  {'ze1','ze2','baseline', 'uncertainty1','uncertainty2','volatility','noise'};
-simParameters                 =  {'sim_om2','sim_om3'};
+simParameters                 =  {'sim_om2','sim_om3','sim_m3'};
 simResponseModelParameters    =  {'sim_ze1','sim_ze2','sim_baseline','sim_uncertainty1','sim_uncertainty2','sim_volatility','sim_noise'};
 
 nParameters = numel([Parameters ResponseModelParameters]');
@@ -31,7 +31,7 @@ variables_bamp = cell(nSubjects, numel(nParameters));
 simulated_bamp = cell(nSubjects, numel(nParameters));
 
 % % Load seed for reproducible results
-rng('shuffle');
+rng('default');
 % state = rng;
 File = fullfile(options.configroot, 'RNGState.mat');
 % save(File, 'state');
@@ -63,42 +63,43 @@ for iSubject = 1:nSubjects
         y_choice         = outputMatrix(:,3);
     end
     
-    est_bamp=tapas_fitModel(y_choice,input_u,[options.model.simPerceptual,'_config'],...
-            [options.model.simResponse,'_config']);
+    est_bamp=tapas_fitModel(y_choice,input_u,[options.model.winningPerceptual,'_config'],...
+            [options.model.winningResponse,'_config']);
         bamp_plotTraj(est_bamp,options);
-    sim = tapas_simModel(est_bamp.u,options.model.simPerceptual,...
-        est_bamp.p_prc.p,options.model.simResponse,est_bamp.p_obs.p);
+    sim = tapas_simModel(est_bamp.u,options.model.winningPerceptual,...
+        est_bamp.p_prc.p,options.model.winningResponse,est_bamp.p_obs.p);
     y_responses = sim.y;
     input_u     = sim.u;
     
-    sim_bamp=tapas_fitModel(y_responses,input_u,[options.model.simPerceptual,'_config'],...
-        [options.model.simResponse,'_config']);
+    sim_bamp=tapas_fitModel(y_responses,input_u,[options.model.winningPerceptual,'_config'],...
+        [options.model.winningResponse,'_config']);
     
     variables_bamp{iSubject,1} = est_bamp.p_prc.om(2);
     variables_bamp{iSubject,2} = est_bamp.p_prc.om(3);
-    variables_bamp{iSubject,3} = est_bamp.p_obs.ze1;
-    variables_bamp{iSubject,4} = est_bamp.p_obs.ze2;
-    variables_bamp{iSubject,5} = est_bamp.p_obs.be0;
-    variables_bamp{iSubject,6} = est_bamp.p_obs.be1;
-    variables_bamp{iSubject,7} = est_bamp.p_obs.be2;
-    variables_bamp{iSubject,8} = est_bamp.p_obs.be3;
-    variables_bamp{iSubject,9} = est_bamp.p_obs.ze;
+    variables_bamp{iSubject,3} = est_bamp.p_prc.m(3);
+    variables_bamp{iSubject,4} = est_bamp.p_obs.ze1;
+    variables_bamp{iSubject,5} = est_bamp.p_obs.ze2;
+    variables_bamp{iSubject,6} = est_bamp.p_obs.be0;
+    variables_bamp{iSubject,7} = est_bamp.p_obs.be1;
+    variables_bamp{iSubject,8} = est_bamp.p_obs.be2;
+    variables_bamp{iSubject,9} = est_bamp.p_obs.be3;
+    variables_bamp{iSubject,10} = est_bamp.p_obs.ze;
 
     simulated_bamp{iSubject,1} = sim_bamp.p_prc.om(2);
     simulated_bamp{iSubject,2} = sim_bamp.p_prc.om(3);
-    simulated_bamp{iSubject,3} = sim_bamp.p_obs.ze1;
-    simulated_bamp{iSubject,4} = sim_bamp.p_obs.ze2;
-    simulated_bamp{iSubject,5} = sim_bamp.p_obs.be0;
-    simulated_bamp{iSubject,6} = sim_bamp.p_obs.be1;
-    simulated_bamp{iSubject,7} = sim_bamp.p_obs.be2;
-    simulated_bamp{iSubject,8} = sim_bamp.p_obs.be3;
-    simulated_bamp{iSubject,9} = sim_bamp.p_obs.ze;
+    simulated_bamp{iSubject,3} = sim_bamp.p_prc.m(3);
+    simulated_bamp{iSubject,4} = sim_bamp.p_obs.ze1;
+    simulated_bamp{iSubject,5} = sim_bamp.p_obs.ze2;
+    simulated_bamp{iSubject,6} = sim_bamp.p_obs.be0;
+    simulated_bamp{iSubject,7} = sim_bamp.p_obs.be1;
+    simulated_bamp{iSubject,8} = sim_bamp.p_obs.be2;
+    simulated_bamp{iSubject,9} = sim_bamp.p_obs.be3;
+    simulated_bamp{iSubject,10} = sim_bamp.p_obs.ze;
     
 end
 
-variables_all             = [cell2mat(variables_bamp) cell2mat(simulated_bamp)];
-variablesPerceptualModels = [variables_bamp(:,[1:2]) simulated_bamp(:,[1:2])];
-variablesResponseModels   = [variables_bamp(:,[3:end]) simulated_bamp(:,[3:end])];
+variablesPerceptualModels = [variables_bamp(:,[1:3]) simulated_bamp(:,[1:3])];
+variablesResponseModels   = [variables_bamp(:,[4:end]) simulated_bamp(:,[4:end])];
 %% Save it
 ofile=fullfile(options.configroot,'bamp_empirical_simulated.xlsx');
 subjects = subjects';
