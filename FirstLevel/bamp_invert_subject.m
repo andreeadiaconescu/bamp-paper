@@ -35,9 +35,14 @@ for iModel = 1:nModels
     end
     
     switch id
-        case {'C1719','V1705','A1706','V1714'}
-            est_bamp=tapas_fitModel(y_choice,input_u,'tapas_hgf_binary_drift_config',...
-                [response_models{iCombPercResp(iModel,2)},'_config']);
+        case {'V1704'}
+            if iModel == 1
+                est_bamp=tapas_fitModel(y_choice,input_u,'tapas_hgf_binary_config',...
+                    [response_models{iCombPercResp(iModel,2)},'_config']);
+            else
+                est_bamp=tapas_fitModel(y_choice,input_u,[perceptual_models{iCombPercResp(iModel,1)},'_config'],...
+                    [response_models{iCombPercResp(iModel,2)},'_config']);
+            end
         otherwise
             est_bamp=tapas_fitModel(y_choice,input_u,[perceptual_models{iCombPercResp(iModel,1)},'_config'],...
                 [response_models{iCombPercResp(iModel,2)},'_config']);
